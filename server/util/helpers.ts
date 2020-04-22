@@ -10,17 +10,17 @@ export class Helpers {
   public static getTimestamp = function () {
     return moment().format(process.env.DATE_FORMAT);
   };
-  public static urlTest = function (url) {
+  public static urlTest = function (url: string) {
     return url
       ? /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi.test(
           url
         )
       : true;
   };
-  public static emailTest = function (email) {
+  public static emailTest = function (email: string) {
     return email ? /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) : false;
   };
-  public static passwordTest = function (password) {
+  public static passwordTest = function (password: string) {
     return password
       ? /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/.test(password)
       : false;

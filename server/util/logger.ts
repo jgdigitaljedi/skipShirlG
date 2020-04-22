@@ -56,6 +56,7 @@ export class ApiLogger {
   }
   write(text: string, level?: string): void {
     const eLevel = level || 'info';
+    // @ts-ignore
     this.logger[eLevel](text);
   }
   getLogger(): Logger {

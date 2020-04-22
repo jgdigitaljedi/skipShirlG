@@ -47,7 +47,7 @@ app.use(
     },
     stream: process.stdout
   }),
-  (err, req, res, next) => {
+  (err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
     if (err) {
       try {
         switch (err.name) {
@@ -71,6 +71,6 @@ app.use(
   }
 );
 
-app.listen(3001, function () {
+app.listen(4000, function () {
   console.log(chalk.cyan('App server listening on port 3000!'));
 });
