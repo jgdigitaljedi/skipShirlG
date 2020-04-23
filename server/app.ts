@@ -72,5 +72,5 @@ app.use(
 );
 
 app.listen(4000, function () {
-  console.log(chalk.cyan('App server listening on port 3000!'));
+  console.log(chalk.cyan('App server listening on port 4000!'));
 });
