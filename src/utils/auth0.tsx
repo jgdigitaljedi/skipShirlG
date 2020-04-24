@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useContext, createContext, ReactChildren } from "react";
-import createAuth0Client, { Auth0ClientOptions } from "@auth0/auth0-spa-js";
+import React, { useState, useEffect, useContext, createContext, ReactChildren, Context } from "react";
+import createAuth0Client, { Auth0ClientOptions, Auth0Client } from "@auth0/auth0-spa-js";
 
-interface ContextValueType {
+interface IContextValueType {
   isAuthenticated?: boolean,
   user?: any,
   loading?: boolean,
   popupOpen?: boolean,
-  loginWithPopup?: boolean,
+  loginWithPopup?: Function,
   handleRedirectCallback?: () => void,
   getIdTokenClaims?: (...p: any) => any,
   loginWithRedirect?: (...p: any) => any,
@@ -15,34 +15,44 @@ interface ContextValueType {
   logout?: (...p: any) => any
 }
 
-interface IState {
-  auth0Client: any,
-  isLoading: boolean,
-  isAuthenticated: boolean,
-  user?: any;
-}
+interface IAuthContext extends Auth0ClientOptions, IContextValueType {}
 
 const DEFAULT_REDIRECT_CALLBACK = () =>
   window.history.replaceState({}, document.title, window.location.pathname);
 
-export const Auth0Context: any = createContext<ContextValueType | null>(null);
-export const useAuth0 = () => useContext(Auth0Context);
+export const Auth0Context: Context<IAuthContext> = createContext<IAuthContext>({
+  isAuthenticated: false,
+  user: null,
+  loading: false,
+  popupOpen: false,
+  loginWithPopup: () => {},
+  handleRedirectCallback: () => {},
+  getIdTokenClaims: (...p) => {},
+  loginWithRedirect: (...p) => {},
+  getTokenSilently: (...p) => {},
+  getTokenWithPopup: (...p) => {},
+  logout: (...p) => {},
+  domain: '',
+  client_id: '',
+  redirect_uri: ''
+});
+
+export const useAuth0: any = () => useContext(Auth0Context);
 
 export const Auth0Provider = (
   {
     children,
     onRedirectCallback = DEFAULT_REDIRECT_CALLBACK,
     ...initOptions
-  }: {children: ReactChildren, onRedirectCallback: Function}) => {
-    const [isAuthenticated, setIsAuthenticated] = useState();
+  }: {children: ReactChildren, onRedirectCallback: Function, domain: string, client_id: string, redirect_uri: string}) => {
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>();
     const [user, setUser] = useState();
-    const [auth0Client, setAuth0] = useState();
-    const [loading, setLoading] = useState(true);
-    const [popupOpen, setPopupOpen] = useState(false);
+    const [auth0Client, setAuth0] = useState<Auth0Client>();
+    const [loading, setLoading] = useState<boolean>(true);
+    const [popupOpen, setPopupOpen] = useState<boolean>(false);
 
     useEffect(() => {
       const initAuth0 = async () => {
-        // @ts-ignore
         const auth0FromHook = await createAuth0Client(initOptions);
         setAuth0(auth0FromHook);
 
@@ -94,23 +104,23 @@ export const Auth0Provider = (
       setIsAuthenticated(true);
       setUser(user);
     };
+
+    const providerConfig: IContextValueType = {
+      isAuthenticated,
+      user,
+      loading,
+      popupOpen,
+      loginWithPopup,
+      handleRedirectCallback,
+      getIdTokenClaims: (...p) => auth0Client.getIdTokenClaims(...p),
+      loginWithRedirect: (...p) => auth0Client.loginWithRedirect(...p),
+      getTokenSilently: (...p) => auth0Client.getTokenSilently(...p),
+      getTokenWithPopup: (...p) => auth0Client.getTokenWithPopup(...p),
+      logout: (...p) => auth0Client.logout(...p)
+    };
+
     return (
-      // @ts-ignore
-      <Auth0Context.Provider
-        value={{
-          isAuthenticated,
-          user,
-          loading,
-          popupOpen,
-          loginWithPopup,
-          handleRedirectCallback,
-          getIdTokenClaims: (...p) => auth0Client.getIdTokenClaims(...p),
-          loginWithRedirect: (...p) => auth0Client.loginWithRedirect(...p),
-          getTokenSilently: (...p) => auth0Client.getTokenSilently(...p),
-          getTokenWithPopup: (...p) => auth0Client.getTokenWithPopup(...p),
-          logout: (...p) => auth0Client.logout(...p)
-        }}
-      >
+      <Auth0Context.Provider value={providerConfig}>
         {children}
       </Auth0Context.Provider>
     );
