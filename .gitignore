@@ -26,3 +26,6 @@ yarn-debug.log*
 yarn-error.log*
 
 logs/
+
+# will contain secrets not fit for source control
+.env

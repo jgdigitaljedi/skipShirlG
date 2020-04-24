@@ -6,11 +6,15 @@
     "@reach/router": "^1.3.3",
     "body-parser": "^1.19.0",
     "cloudinary-core": "^2.8.2",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
     "helmet": "^3.22.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "morgan": "^1.10.0",
+    "passport": "^0.4.1",
+    "passport-auth0": "^1.3.2",
     "primeicons": "^2.0.0",
     "primereact": "^4.2.0",
     "react": "^16.13.1",
@@ -19,16 +23,17 @@
     "winston": "^3.2.1"
   },
   "scripts": {
-    "start": "npm run server:start & npm run start:client",
+    "start": "npm run start:server & npm run start:client",
     "start:client": "NODE_ENV=development & react-scripts start",
-    "build": "NODE_ENV=production & react-scripts build",
+    "start:server": "NODE_ENV=development & ts-node-dev --project tsconfig.server.json --respawn --transpileOnly ./server/app.ts",
+    "build": "npm run build:client & npm run build:server",
+    "build:client": "NODE_ENV=production & react-scripts build",
+    "build:server": "NODE_ENV=production & npm run clean & npm run tsc",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "clean": "rimraf serverBuild/*",
     "tsc": "tsc --project tsconfig.server.json",
-    "server:start": "NODE_ENV=development & ts-node-dev --project tsconfig.server.json --respawn --transpileOnly ./server/app.ts",
-    "server:build": "NODE_ENV=production & npm run clean & npm run tsc",
-    "server:prod": "npm run server:build & node ./serverBuild/app.js"
+    "server:prod": "npm run build:server & node ./serverBuild/app.js"
   },
   "eslintConfig": {
     "extends": "react-app"

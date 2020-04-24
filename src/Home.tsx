@@ -1,12 +1,13 @@
 import React, { FunctionComponent } from 'react';
 import { RouteComponentProps } from '@reach/router';
+import './Home.scss';
 
-const HomeComponent: FunctionComponent<RouteComponentProps> = () => {
+const Home: FunctionComponent<RouteComponentProps> = () => {
   return (
     <div className="home">
-      <div></div>
+      <div>Home</div>
     </div>
   );
 };
 
-export default HomeComponent;
+export default Home;
