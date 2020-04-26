@@ -2,70 +2,71 @@ import express from 'express';
 import helmet from 'helmet';
 import chalk from 'chalk';
 import morgan from 'morgan';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import path from 'path';
+import cors from 'cors';
+import passport from 'passport';
 import { ApiLogger } from './util/logger';
 import { Helpers } from './util/helpers';
+import { IExpError } from './common.models';
+import './util/passport';
+import routesApi from './routes/index.routes';
+// require('./models/user.model');
 
 const apiLogger = new ApiLogger();
 const helpers = new Helpers();
 const logger = apiLogger.getLogger();
+const salt = process.env.JOEYDBSECRET;
 
 // Create a new express application instance
 const app: express.Application = express();
 
-app.use(
-  // @ts-ignore
-  helmet(),
-  morgan('dev', {
-    skip: function (req, res) {
-      const error = res.statusCode < 400;
-      if (error && res.statusCode >= 300) {
-        logger.info(
-          `code: ${res.statusCode} | message: ${res.statusMessage} | client: ${
-            req.headers['user-agent']
-          } | body: ${req.body && req.body.query ? helpers.jsonToString(req.body.query) : ''}`
-        );
-      }
-      return error;
-    },
-    stream: process.stderr
-  }),
-  morgan('dev', {
-    skip: function (req, res) {
-      const error = res.statusCode >= 400;
-      if (error) {
-        logger.error(
-          `code: ${res.statusCode} | message: ${res.statusMessage} | client: ${
-            req.headers['user-agent']
-          } | body: ${req.body && req.body.query ? helpers.jsonToString(req.body.query) : ''}`
-        );
-      }
-      return error;
-    },
-    stream: process.stdout
-  }),
-  (err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-    if (err) {
-      try {
-        switch (err.name) {
-          case 'UnauthorizedError':
-            logger.info(`Unauthorized request: ${err.name}`);
-            res.status(err.status).json({
-              error: err.message,
-              message: 'Invalid token! You must be logged in to do that!'
-            });
-            break;
-          default:
-            logger.error(`Server error: ${err.name}`);
-            res.status(err.status).json({ error: err.message, message: err.name });
-            break;
-        }
-      } catch (error) {
-        logger.error(`Server error: ${error}`);
-        res.status(500).json({ error, message: 'Server error. Something went wrong!' });
-      }
-    }
+// app.use(morgan('dev'));
+// @ts-ignore
+app.use(morgan('combined', { stream: logger.stream }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(cors());
+// @ts-ignore
+app.use(helmet());
+
+// Initialise Passport before using the route middleware
+app.use(passport.initialize());
+
+// Use the API routes when path starts with /api
+app.use('/api', routesApi);
+
+// Catch unauthorised errors
+app.use((err: IExpError, req: express.Request, res: express.Response) => {
+  if (err.name === 'UnauthorizedError') {
+    res.status(401);
+    res.json({ message: err.name + ': ' + err.message });
   }
-);
+});
+
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
+  app.use((err: IExpError, req: express.Request, res: express.Response) => {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: err
+    });
+  });
+}
+
+// production error handler
+// no stacktraces leaked to user
+app.use((err: IExpError, req: express.Request, res: express.Response) => {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
+});
 
 app.listen(4000, function () {
   console.log(chalk.cyan('App server listening on port 4000!'));
