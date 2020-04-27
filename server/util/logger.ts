@@ -1,5 +1,5 @@
 // import * as winston from 'winston';
-import { Logger, LoggerOptions, loggers, transports, createLogger, format } from 'winston';
+import { Logger, transports, createLogger, format } from 'winston';
 import fs from 'fs';
 import path from 'path';
 

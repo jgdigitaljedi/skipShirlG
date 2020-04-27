@@ -1,5 +1,3 @@
-import { MongooseDocument, Mongoose } from 'mongoose';
-
 export interface IExpError extends Error {
   status?: number;
 }
@@ -14,7 +12,9 @@ export interface IUserMethods {
 }
 
 export interface IUser {
-  Document: any;
+  Document?: any;
+  _id?: string;
+  name?: string;
   email: string;
   firstName: string;
   active: boolean;

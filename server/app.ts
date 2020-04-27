@@ -12,6 +12,8 @@ import { Helpers } from './util/helpers';
 import { IExpError } from './common.models';
 import './util/passport';
 import routesApi from './routes/index.routes';
+import './util/db';
+import './util/passport';
 // require('./models/user.model');
 
 const apiLogger = new ApiLogger();

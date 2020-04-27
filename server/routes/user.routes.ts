@@ -6,7 +6,7 @@ import {
   changePassword,
   resetPasswordLink,
   devUser
-} from '../util/user';
+} from '../controllers/user.controller';
 import jwt from 'express-jwt';
 
 const auth = jwt({
