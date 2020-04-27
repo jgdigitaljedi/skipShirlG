@@ -1,10 +1,10 @@
-import mongoose from 'mongoose';
+import { Schema, model, SchemaType } from 'mongoose';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import moment from 'moment';
 import constants from '../util/constants';
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
   email: {
     type: String,
     unique: true,
@@ -70,4 +70,4 @@ userSchema.methods.generateJwt = function () {
     process.env.SKIPGSECRET
   ); // DO NOT KEEP YOUR SECRET IN THE CODE!
 };
-mongoose.model('User', userSchema);
+model('User', userSchema);

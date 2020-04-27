@@ -2,7 +2,9 @@ import passport from 'passport';
 import * as passportLocal from 'passport-local';
 import mongoose from 'mongoose';
 import '../models/user.model';
+import { IUserMethods } from '../common.models';
 
+// @ts-ignore
 const LocalStrategy = passportLocal.Strategy;
 const User = mongoose.model('User');
 
@@ -12,7 +14,7 @@ passport.use(
       usernameField: 'email'
     },
     (username: string, password: string, done) => {
-      User.findOne({ email: username }, (err, user) => {
+      User.findOne({ email: username }, (err, user: IUserMethods) => {
         if (err) {
           return done(err);
         }

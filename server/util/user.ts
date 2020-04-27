@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import moment from 'moment';
 import { ApiLogger } from '../util/logger';
 import { sendEmail } from '../util/email';
+import { IUser } from '../common.models';
 
 const apiLogger = new ApiLogger();
 const logger = apiLogger.getLogger();
@@ -18,7 +19,8 @@ const User = mongoose.model('User');
  * @param {*} res
  */
 export const register = function (req, res) {
-  const user = new User();
+  // @ts-ignore
+  const user: IUser = new User();
 
   user.firstName = req.body.firstName;
   user.lastName = req.body.hasOwnProperty('lastName') ? req.body.lastName : null;
@@ -101,7 +103,7 @@ export const login = function (req, res) {
  * @param {*} res
  */
 export const deleteMe = function (req, res) {
-  User.findById(req.payload._id, (error, user) => {
+  User.findById(req.payload._id, (error, user: IUser) => {
     if (error) {
       logger.write(error, req);
       res.status(500).json({ error, message: 'ERROR: Problem fetching user info to delete.' });
@@ -135,7 +137,7 @@ export const deleteMe = function (req, res) {
  * @param {*} res
  */
 export const changePassword = function (req, res) {
-  User.findById(req.payload._id, (error, user) => {
+  User.findById(req.payload._id, (error, user: IUser) => {
     if (error) {
       logger.write(error, req);
       res
@@ -175,12 +177,13 @@ export const resetPasswordLink = function (req, res) {
   // generates reset password good for 2 hours and emails link to user
   if (req.body.email) {
     try {
-      User.findOne({ email: req.body.email }, (error, user) => {
+      User.findOne({ email: req.body.email }, (error, user: IUser) => {
         if (error) {
           logger.write(error, req);
           res.status(500).json({ error, message: 'ERROR: Problem finding user by email.' });
         } else {
           user.resetToken = crypto.randomBytes(20).toString('hex');
+          // @ts-ignore
           user.resetTokenExpires = moment().add(2, 'hours');
           user.save((err) => {
             if (err) {
@@ -234,7 +237,8 @@ export const devUser = function (req, res) {
       .status(401)
       .json({ message: 'This is only available in development for testing purposes.' });
   } else {
-    const user = new User();
+    // @ts-ignore
+    const user: IUser = new User();
 
     user.firstName = req.body.firstName;
     user.lastName = req.body.hasOwnProperty('lastName') ? req.body.lastName : null;

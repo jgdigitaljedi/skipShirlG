@@ -4,7 +4,12 @@ import chalk from 'chalk';
 const key = process.env.SPARKPOST_API_KEY;
 const client = new SparkPost(key);
 
-export const sendEmail = function (email, name, token) {
+interface IName {
+  first: string;
+  last: string;
+}
+
+export const sendEmail = function (email: string, name: IName, token: string): Promise<any> {
   return new Promise((resolve, reject) => {
     let recipient;
     let baseUrl;
@@ -26,6 +31,7 @@ export const sendEmail = function (email, name, token) {
       };
     }
     client.transmissions
+      // @ts-ignore
       .send({
         options: {
           // sandbox: true
