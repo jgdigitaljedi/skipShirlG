@@ -6,7 +6,7 @@ const baseUrl = `${serverRoot}${routePrefix}`;
 
 // @TODO: make interfaces
 export default {
-  listUsers: (request: any) => Axios.get(`${baseUrl}/listusers`),
+  listUsers: () => Axios.get(`${baseUrl}/listusers`),
   deleteUser: (request: any) => Axios.delete(`${baseUrl}/deleteuser`, request),
   userActive: (request: any) => Axios.post(`${baseUrl}/useractive`, request)
 };
