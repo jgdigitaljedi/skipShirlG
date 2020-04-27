@@ -1,10 +1,9 @@
 import mongoose from 'mongoose';
 import { IUser } from '../common.models';
-import { ApiLogger } from '../util/logger';
+import { Helpers } from '../util/helpers';
 
 const User = mongoose.model('User');
-const apiLogger = new ApiLogger();
-const logger = apiLogger.getLogger();
+const logger = Helpers.apiLogger;
 
 // patch user - suspend account for a while and/or modify user
 

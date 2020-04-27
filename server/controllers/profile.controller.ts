@@ -1,10 +1,9 @@
 import mongoose from 'mongoose';
-import { ApiLogger } from '../util/logger';
 import { IUser } from '../common.models';
+import { Helpers } from '../util/helpers';
 const User = mongoose.model('User');
 
-const apiLogger = new ApiLogger();
-const logger = apiLogger.getLogger();
+const logger = Helpers.apiLogger;
 
 function unarthorizedResponse(res) {
 	res.status(401).json({
@@ -23,7 +22,7 @@ export const profileRead = function (req, res): void {
 	if (!req.payload._id) {
 		unarthorizedResponse(res);
 	} else {
-		User.findById(req.payload._id).exec((err, user: IUser) => {
+		User.findById(req.payload._id).exec((err: string, user: IUser) => {
 			if (err) {
 				logger.write(err, req);
 				res.status(500).json({ error: err, message: 'ERROR: Error fetching user profile.' });

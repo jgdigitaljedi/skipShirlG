@@ -1,10 +1,9 @@
 import mongoose from 'mongoose';
 import chalk from 'chalk';
-import { ApiLogger } from './logger';
 import '../models/user.model';
+import { Helpers } from './helpers';
 
-const apiLogger = new ApiLogger();
-const logger = apiLogger.getLogger();
+const logger = Helpers.apiLogger;
 let gracefulShutdown;
 let dbURI = 'mongodb://localhost:27017/skipg';
 if (process.env.NODE_ENV === 'production') {

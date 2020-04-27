@@ -1,12 +1,11 @@
 import passport from 'passport';
 import mongoose from 'mongoose';
 import moment from 'moment';
-import { ApiLogger } from '../util/logger';
 import { sendEmail } from '../util/email';
 import { IUser } from '../common.models';
+import { Helpers } from '../util/helpers';
 
-const apiLogger = new ApiLogger();
-const logger = apiLogger.getLogger();
+const logger = Helpers.apiLogger;
 
 const crypto = require('crypto');
 const User = mongoose.model('User');

@@ -4,22 +4,17 @@ import chalk from 'chalk';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-import path from 'path';
 import cors from 'cors';
 import passport from 'passport';
-import { ApiLogger } from './util/logger';
 import { Helpers } from './util/helpers';
 import { IExpError } from './common.models';
-import './util/passport';
-import routesApi from './routes/index.routes';
 import './util/db';
 import './util/passport';
-// require('./models/user.model');
+import routesApi from './routes/index.routes';
 
-const apiLogger = new ApiLogger();
-const helpers = new Helpers();
+// const helpers = new Helpers();
+const apiLogger = Helpers.apiLogger;
 const logger = apiLogger.getLogger();
-const salt = process.env.JOEYDBSECRET;
 
 // Create a new express application instance
 const app: express.Application = express();
