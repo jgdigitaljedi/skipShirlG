@@ -1,8 +1,7 @@
 import React, { FunctionComponent } from 'react';
-import { RouteComponentProps } from '@reach/router';
 import './Home.scss';
 
-const Home: FunctionComponent<RouteComponentProps> = () => {
+const Home: FunctionComponent<any> = () => {
   return (
     <div className="home">
       <div>Home</div>

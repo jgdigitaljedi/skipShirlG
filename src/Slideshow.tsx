@@ -1,8 +1,7 @@
 import React, { FunctionComponent } from 'react';
-import { RouteComponentProps } from '@reach/router';
 import './Slideshow.scss';
 
-const Slideshow: FunctionComponent<RouteComponentProps> = () => {
+const Slideshow: FunctionComponent<any> = () => {
   return (
     <div className="slideshow">
       <div>Slideshow</div>

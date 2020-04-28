@@ -1,8 +1,7 @@
 import React, { FunctionComponent } from 'react';
-import { RouteComponentProps } from '@reach/router';
 import './Login.scss';
 
-const Login: FunctionComponent<RouteComponentProps> = () => {
+const Login: FunctionComponent<any> = () => {
   return (
     <div className="login">
       <div>Login</div>
