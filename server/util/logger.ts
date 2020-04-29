@@ -60,8 +60,8 @@ logger.logThis = (err: IError | string, req: IUserRequest) => {
     logger.error(err + ' - ' + req.originalUrl + ' - ' + req.method + ' - ' + req.ip);
   } else {
     logger.error(
-      err.status.toString() ||
-        500 + ' -  ' + err.message + ' - ' + req.originalUrl + ' - ' + req.method + ' - ' + req.ip
+      (err && err.status ?err.status.toString() : '') ||
+        500 + ' -  ' + (err && err.message ? err.message : '') + ' - ' + req.originalUrl + ' - ' + req.method + ' - ' + req.ip
     );
   }
 };

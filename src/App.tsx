@@ -12,8 +12,8 @@ import history from './utils/history';
 function App(): JSX.Element {
   return (
     <div className="App">
-      <Navbar />
       <Router history={history}>
+        <Navbar />
         <Switch>
           <Route exact path="/">
             <Home />
