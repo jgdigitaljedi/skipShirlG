@@ -1,11 +1,13 @@
+import express from 'express';
+
 export interface IExpError extends Error {
   status?: number;
 }
 
 export interface IUserMethods {
   generateResetToken: () => void;
-  setPassword: (string) => void;
-  validPassword: (string) => boolean;
+  setPassword: (arg0: string) => void;
+  validPassword: (arg0: string) => boolean;
   joinDateAdd: () => void;
   profileUpdated: () => void;
   generateJwt: () => any;
@@ -27,11 +29,30 @@ export interface IUser {
   resetToken: string;
   resetTokenExpires: string;
   generateResetToken: () => void;
-  setPassword: (string) => void;
-  validPassword: (string) => boolean;
+  setPassword: (arg0: string) => void;
+  validPassword: (arg0: string) => boolean;
   joinDateAdd: () => void;
   profileUpdated: () => void;
   generateJwt: () => any;
-  save?: (any) => void;
-  remove?: (any) => void;
+  save?: (arg0: any) => void;
+  remove?: (arg0: any) => void;
+}
+
+export interface IUserRequest extends express.Request {
+  payload?: {
+    admin: boolean;
+    _id?: string;
+  };
+  body: {
+    _id?: number;
+    active?: boolean;
+    firstName?: string;
+    lastName?: string;
+    password?: string;
+    email?: string;
+    newpass?: string;
+  };
+  method: string;
+  ip: string;
+  originalUrl: string;
 }

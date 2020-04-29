@@ -11,10 +11,9 @@ import { IExpError } from './common.models';
 import './util/db';
 import './util/passport';
 import routesApi from './routes/index.routes';
+import logger from './util/logger';
 
 // const helpers = new Helpers();
-const apiLogger = Helpers.apiLogger;
-const logger = apiLogger.getLogger();
 
 // Create a new express application instance
 const app: express.Application = express();

@@ -2,10 +2,9 @@ import passport from 'passport';
 import mongoose from 'mongoose';
 import moment from 'moment';
 import { sendEmail } from '../util/email';
-import { IUser } from '../common.models';
-import { Helpers } from '../util/helpers';
-
-const logger = Helpers.apiLogger;
+import { IUser, IUserRequest } from '../common.models';
+import logger from '../util/logger';
+import express from 'express';
 
 const crypto = require('crypto');
 const User = mongoose.model('User');
@@ -17,7 +16,7 @@ const User = mongoose.model('User');
  * @param {*} req
  * @param {*} res
  */
-export const register = function (req, res) {
+export const register = function (req: IUserRequest, res: express.Response): void {
   // @ts-ignore
   const user: IUser = new User();
 
@@ -30,9 +29,9 @@ export const register = function (req, res) {
 
   user.setPassword(req.body.password);
 
-  user.save(function (err) {
+  user.save(function (err: any) {
     if (err) {
-      logger.write(err, req);
+      logger.logThis(err, req);
       res.status(500).json({ error: err, message: 'ERROR: Problem saving new user to DB.' });
     } else {
       let token;
@@ -58,13 +57,13 @@ export const register = function (req, res) {
  * @param {*} req
  * @param {*} res
  */
-export const login = function (req, res) {
+export const login = function (req: IUserRequest, res: express.Response): void {
   passport.authenticate('local', (err, user, info) => {
     let token;
 
     // If Passport throws/catches an error
     if (err) {
-      logger.write(err, req);
+      logger.logThis(err, req);
       res.status(404).json({ error: err, message: 'ERROR: Error with Passport.' });
       return;
     }
@@ -84,7 +83,7 @@ export const login = function (req, res) {
           lastName: user.lastName
         });
       } catch (e) {
-        logger.write(e, req);
+        logger.logThis(e, req);
         res.status(500).json({ error: e, message: 'ERROR: Problem logging in.' });
       }
     } else {
@@ -101,19 +100,19 @@ export const login = function (req, res) {
  * @param {*} req
  * @param {*} res
  */
-export const deleteMe = function (req, res) {
+export const deleteMe = function (req: IUserRequest, res: express.Response): void {
   User.findById(req.payload._id, (error, user: IUser) => {
     if (error) {
-      logger.write(error, req);
+      logger.logThis(error, req);
       res.status(500).json({ error, message: 'ERROR: Problem fetching user info to delete.' });
     } else {
       const sentPwHas = crypto
         .pbkdf2Sync(req.body.password, user.salt, 1000, 64, 'sha512')
         .toString('hex');
       if (req.body.email === user.email && sentPwHas === user.hash) {
-        user.remove((err) => {
+        user.remove((err: any) => {
           if (err) {
-            logger.write(err, req);
+            logger.logThis(err, req);
             res
               .status(500)
               .json({ error: err, message: 'ERROR: Problem deleting user after found.' });
@@ -135,10 +134,10 @@ export const deleteMe = function (req, res) {
  * @param {*} req
  * @param {*} res
  */
-export const changePassword = function (req, res) {
+export const changePassword = function (req: IUserRequest, res: express.Response): void {
   User.findById(req.payload._id, (error, user: IUser) => {
     if (error) {
-      logger.write(error, req);
+      logger.logThis(error, req);
       res
         .status(500)
         .json({ error, message: 'ERROR: Problem fetching user data to change password.' });
@@ -146,9 +145,9 @@ export const changePassword = function (req, res) {
       if (req.body.email === user.email) {
         user.setPassword(req.body.newpass);
         user.profileUpdated();
-        user.save((err) => {
+        user.save((err: any) => {
           if (err) {
-            logger.write(err, req);
+            logger.logThis(err, req);
             res.status(500).json({ error: err, message: 'ERROR: Problem changing password.' });
           } else {
             res.status(200).json({ error: false, message: 'Password change was successful!' });
@@ -171,22 +170,22 @@ export const changePassword = function (req, res) {
  * @param {*} req
  * @param {*} res
  */
-export const resetPasswordLink = function (req, res) {
+export const resetPasswordLink = function (req: IUserRequest, res: express.Response): void {
   // @TODO: pick an email service and finish this
   // generates reset password good for 2 hours and emails link to user
   if (req.body.email) {
     try {
       User.findOne({ email: req.body.email }, (error, user: IUser) => {
         if (error) {
-          logger.write(error, req);
+          logger.logThis(error, req);
           res.status(500).json({ error, message: 'ERROR: Problem finding user by email.' });
         } else {
           user.resetToken = crypto.randomBytes(20).toString('hex');
           // @ts-ignore
           user.resetTokenExpires = moment().add(2, 'hours');
-          user.save((err) => {
+          user.save((err: any) => {
             if (err) {
-              logger.write(err, req);
+              logger.logThis(err, req);
               res
                 .status(500)
                 .json({ error: err, message: 'ERROR: Problem saving reset token for user.' });
@@ -199,7 +198,7 @@ export const resetPasswordLink = function (req, res) {
                   });
                 })
                 .catch((err) => {
-                  logger.write(err, req);
+                  logger.logThis(err, req);
                   res
                     .status(500)
                     .json({ error: err, message: 'ERROR: Problem sending password reset email.' });
@@ -209,13 +208,13 @@ export const resetPasswordLink = function (req, res) {
         }
       });
     } catch (e) {
-      logger.write(e, req);
+      logger.logThis(e, req);
       res
         .status(500)
         .json({ error: e, message: 'ERROR: Problem getting user or sending reset email.' });
     }
   } else {
-    res.status().json({
+    res.status(403).json({
       error: true,
       message: 'YOU MUST ENTER YOUR EMAIL ADDRESS TO GET A PASSWORD REST LINK!'
     });
@@ -229,7 +228,7 @@ export const resetPasswordLink = function (req, res) {
  * @param {*} req
  * @param {*} res
  */
-export const devUser = function (req, res) {
+export const devUser = function (req: IUserRequest, res: express.Response): void {
   const env = process.env.NODE_ENV || 'development';
   if (env === 'production') {
     res

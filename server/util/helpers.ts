@@ -1,4 +1,3 @@
-import { ApiLogger } from './logger';
 import moment from 'moment';
 
 export class Helpers {
@@ -26,13 +25,7 @@ export class Helpers {
       : false;
   };
 
-  private static _apiLogger = new ApiLogger();
-
   constructor() {}
-
-  static get apiLogger() {
-    return this._apiLogger;
-  }
 
   removeBreaks(str: string): string {
     return str.replace(/\n|\r|\\n/g, '');

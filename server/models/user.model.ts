@@ -31,26 +31,26 @@ const userSchema = new Schema({
   resetTokenExpires: String
 });
 
-userSchema.methods.generateResetToken = function () {
+userSchema.methods.generateResetToken = function (): void {
   this.resetToken = crypto.randomBytes(20).toString('hex');
   this.resetTokenExpires = moment().add(2, 'hours');
 };
 
-userSchema.methods.setPassword = function (password) {
+userSchema.methods.setPassword = function (password: string): void {
   this.salt = crypto.randomBytes(16).toString('hex');
   this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex');
 };
 
-userSchema.methods.validPassword = function (password) {
+userSchema.methods.validPassword = function (password: string): boolean {
   const hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex');
   return this.hash === hash;
 };
 
-userSchema.methods.joinDateAdd = function () {
+userSchema.methods.joinDateAdd = function (): void {
   this.joinDate = moment().format(constants.dateFormat);
 };
 
-userSchema.methods.profileUpdated = function () {
+userSchema.methods.profileUpdated = function (): void {
   this.lastUpdated = moment().format(constants.dateFormat);
 };
 
@@ -70,4 +70,5 @@ userSchema.methods.generateJwt = function () {
     process.env.SKIPGSECRET
   ); // DO NOT KEEP YOUR SECRET IN THE CODE!
 };
+
 model('User', userSchema);
