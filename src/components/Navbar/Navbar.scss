@@ -1,36 +1,50 @@
 @import '../../styles/theme.scss';
 @import '../../styles/mixins/index.scss';
 
-.navbar {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  column-gap: 2rem;
-  justify-items: center;
-  align-items: center;
-  justify-content: space-between;
-  color: $white;
-  padding: $gutter 2rem;
-  background: linear-gradient(
-    hsl(0, 0%, 0%) 0%,
-    hsla(0, 0%, 0%, 0.738) 19%,
-    hsla(0, 0%, 0%, 0.541) 34%,
-    hsla(0, 0%, 0%, 0.382) 47%,
-    hsla(0, 0%, 0%, 0.278) 56.5%,
-    hsla(0, 0%, 0%, 0.194) 65%,
-    hsla(0, 0%, 0%, 0.126) 73%,
-    hsla(0, 0%, 0%, 0.075) 80.2%,
-    hsla(0, 0%, 0%, 0.042) 86.1%,
-    hsla(0, 0%, 0%, 0.021) 91%,
-    hsla(0, 0%, 0%, 0.008) 95.2%,
-    hsla(0, 0%, 0%, 0.002) 98.2%,
-    hsla(0, 0%, 0%, 0) 100%
-  );
-  .navbar--links {
-    a {
-      margin: 0 $gutter;
+.navbar-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: $gutter;
+  .navbar {
+    // display: grid;
+    // grid-template-columns: 1fr 1fr 1fr;
+    // column-gap: 2rem;
+    // justify-items: center;
+    display: flex;
+    margin-top: gutter;
+    background-color: $white;
+    align-items: center;
+    justify-content: space-between;
+    color: $white;
+    padding: $gutter 2rem;
+    width: 80%;
+    min-width: 50rem;
+    .navbar--brand {
+      h2 {
+        color: $primary;
+        padding: 0;
+        margin: 0;
+        div {
+          font-size: 1.1rem;
+        }
+      }
     }
-  }
-  .navbar--user {
-
+    .navbar--links {
+      a {
+        margin: 0 $gutter;
+      }
+      .svg-inline--fa {
+        color: $primary;
+        &:hover {
+          color: $accent;
+        }
+        &:visited {
+          color: $dark;
+        }
+      }
+    }
+    .navbar--user {
+    }
   }
 }

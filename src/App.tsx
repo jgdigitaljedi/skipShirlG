@@ -8,6 +8,11 @@ import UserCP from './UserCP';
 import Navbar from './components/Navbar/Navbar';
 import Login from './Login';
 import history from './utils/history';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fab } from '@fortawesome/free-brands-svg-icons';
+import { faUser, faSignInAlt, faSignOutAlt, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+
+library.add(fab, faUser, faSignInAlt, faSignOutAlt, faUserPlus);
 
 function App(): JSX.Element {
   return (
