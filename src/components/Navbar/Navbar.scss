@@ -34,6 +34,10 @@
       a {
         margin: 0 $gutter;
       }
+      &.active-route {
+        font-weight: bold;
+        color: $accent;
+      }
       .svg-inline--fa {
         color: $primary;
         &:hover {

@@ -1,12 +1,27 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect, useState, useCallback } from 'react';
 import './Navbar.scss';
 import { appLinks, IAppLinksSection } from '../../constants/nav.constants';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 
 const Navbar: FunctionComponent<any> = () => {
   // @TODO: write auth logic and user logic and use it here
+  const [currentRoute, setCurrentRoute] = useState<string>('home');
+
+  const getCurrentPath = useCallback(() => {
+    console.log('window.location', window.location);
+    const path = window.location.pathname;
+    if (path === '/') {
+      setCurrentRoute('home');
+    } else {
+      setCurrentRoute(path);
+    }
+  }, [setCurrentRoute]);
+
+  useEffect(() => {
+    getCurrentPath();
+  }, [getCurrentPath]);
   const userLogged = false;
   return (
     <div className="navbar-wrapper">
@@ -21,18 +36,28 @@ const Navbar: FunctionComponent<any> = () => {
         <div className="navbar--links">
           {appLinks.main.map((link, index) => {
             return (
-              <Link to={link.path} key={index}>
+              <NavLink
+                to={link.path}
+                key={index}
+                activeClassName="active-route"
+                isActive={() => currentRoute === link.path}
+              >
                 {link.label}
-              </Link>
+              </NavLink>
             );
           })}
           {appLinks.user
             .filter((item) => item.logged === userLogged)
             .map((link: IAppLinksSection, index) => {
               return (
-                <Link to={link.path as string} key={index}>
+                <NavLink
+                  to={link.path as string}
+                  key={index}
+                  activeClassName="active-route"
+                  isActive={() => currentRoute === link.path}
+                >
                   <FontAwesomeIcon icon={['fas', link.icon as IconName]} />
-                </Link>
+                </NavLink>
               );
             })}
           {/** notifications */
