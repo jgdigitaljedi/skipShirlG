@@ -33,22 +33,34 @@
     .navbar--links {
       a {
         margin: 0 $gutter;
-      }
-      &.active-route {
-        font-weight: bold;
-        color: $accent;
+        color: $primary;
+        font-size: 1.1rem;
+        &:visited {
+          color: $primary;
+        }
+        &:hover {
+          color: $secondary;
+        }
+        &.active-route {
+          font-weight: bold;
+          color: $accent;
+          &:visited {
+            color: $accent;
+          }
+          &:hover {
+            color: $secondary;
+          }
+        }
       }
       .svg-inline--fa {
         color: $primary;
-        &:hover {
-          color: $accent;
-        }
         &:visited {
-          color: $dark;
+          color: $primary;
+        }
+        &:hover {
+          color: $secondary;
         }
       }
-    }
-    .navbar--user {
     }
   }
 }

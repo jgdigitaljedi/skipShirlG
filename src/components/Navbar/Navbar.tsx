@@ -7,22 +7,18 @@ import { IconName } from '@fortawesome/fontawesome-svg-core';
 
 const Navbar: FunctionComponent<any> = () => {
   // @TODO: write auth logic and user logic and use it here
-  const [currentRoute, setCurrentRoute] = useState<string>('home');
+  const userLogged = false;
+  const [currentRoute, setCurrentRoute] = useState<string>('/');
 
   const getCurrentPath = useCallback(() => {
-    console.log('window.location', window.location);
     const path = window.location.pathname;
-    if (path === '/') {
-      setCurrentRoute('home');
-    } else {
-      setCurrentRoute(path);
-    }
+    setCurrentRoute(path);
   }, [setCurrentRoute]);
 
   useEffect(() => {
     getCurrentPath();
   }, [getCurrentPath]);
-  const userLogged = false;
+
   return (
     <div className="navbar-wrapper">
       <div className="navbar">
@@ -41,6 +37,7 @@ const Navbar: FunctionComponent<any> = () => {
                 key={index}
                 activeClassName="active-route"
                 isActive={() => currentRoute === link.path}
+                onClick={() => setCurrentRoute(link.path)}
               >
                 {link.label}
               </NavLink>
@@ -55,13 +52,13 @@ const Navbar: FunctionComponent<any> = () => {
                   key={index}
                   activeClassName="active-route"
                   isActive={() => currentRoute === link.path}
+                  onClick={() => setCurrentRoute(link.path)}
                 >
                   <FontAwesomeIcon icon={['fas', link.icon as IconName]} />
                 </NavLink>
               );
             })}
-          {/** notifications */
-          /** login/logout */}
+          {/** notifications */}
         </div>
       </div>
     </div>
