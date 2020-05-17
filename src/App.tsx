@@ -18,7 +18,7 @@ library.add(fab, faUser, faSignInAlt, faSignOutAlt, faUserPlus);
 function App(): JSX.Element {
   return (
     <div className="App">
-      <UserContextProvider>
+      <UserContextProvider token="" hasCookie={false} name="">
         <Router history={history}>
           <Navbar />
           <Switch>

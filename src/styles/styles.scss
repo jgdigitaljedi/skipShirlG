@@ -72,6 +72,14 @@ html {
       overflow-y: auto;
     }
   }
+
+  .icon-button {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    outline: transparent;
+  }
 }
 
 // primereact overrides

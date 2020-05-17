@@ -15,6 +15,10 @@ const Navbar: FunctionComponent<any> = () => {
     setCurrentRoute(path);
   }, [setCurrentRoute]);
 
+  const openDialog = (link: IAppLinksSection) => {
+    console.log('link for dialog', link);
+  };
+
   useEffect(() => {
     getCurrentPath();
   }, [getCurrentPath]);
@@ -33,11 +37,11 @@ const Navbar: FunctionComponent<any> = () => {
           {appLinks.main.map((link, index) => {
             return (
               <NavLink
-                to={link.path}
+                to={link.path as string}
                 key={index}
                 activeClassName="active-route"
                 isActive={() => currentRoute === link.path}
-                onClick={() => setCurrentRoute(link.path)}
+                onClick={() => setCurrentRoute(link.path as string)}
               >
                 {link.label}
               </NavLink>
@@ -46,16 +50,20 @@ const Navbar: FunctionComponent<any> = () => {
           {appLinks.user
             .filter((item) => item.logged === userLogged)
             .map((link: IAppLinksSection, index) => {
-              return (
+              return link.path ? (
                 <NavLink
                   to={link.path as string}
                   key={index}
                   activeClassName="active-route"
                   isActive={() => currentRoute === link.path}
-                  onClick={() => setCurrentRoute(link.path)}
+                  onClick={() => setCurrentRoute(link.path as string)}
                 >
                   <FontAwesomeIcon icon={['fas', link.icon as IconName]} />
                 </NavLink>
+              ) : (
+                <button className="icon-button" onClick={() => openDialog(link)}>
+                  <FontAwesomeIcon icon={['fas', link.icon as IconName]} />
+                </button>
               );
             })}
           {/** notifications */}

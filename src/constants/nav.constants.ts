@@ -1,7 +1,7 @@
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 
 export interface IAppLinksSection {
-  path: string;
+  path: string | null;
   icon: IconName | null;
   label: string;
   tooltip: string;
@@ -22,7 +22,7 @@ export const appLinks: IAppLinks = {
   user: [
     { path: '/user', label: '', icon: 'user', logged: true, tooltip: 'Your dashboard' },
     {
-      path: '/login',
+      path: null,
       label: '',
       icon: 'sign-in-alt',
       logged: false,
