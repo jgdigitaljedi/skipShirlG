@@ -1,4 +1,4 @@
-import React, { createContext, useState, Dispatch, SetStateAction, ReactNode } from 'react';
+import React, { createContext, useState, Dispatch, SetStateAction } from 'react';
 
 export interface IUserContext {
   token: string;
@@ -6,8 +6,8 @@ export interface IUserContext {
   name: string;
 }
 
-interface IUserContextProps extends IUserContext {
-  children: ReactNode;
+export interface IUserContextProps extends IUserContext {
+  children: any;
 }
 
 const defaultUserState = { token: '', hasCookie: false, name: '' };
@@ -16,7 +16,7 @@ const UserContext = createContext<[IUserContext, Dispatch<SetStateAction<IUserCo
   () => defaultUserState
 ]);
 
-const UserContextProvider = (props: IUserContextProps) => {
+const UserContextProvider = (props: any) => {
   const [uc, setUc] = useState<IUserContext>(defaultUserState);
   return <UserContext.Provider value={[uc, setUc]}>{props.children}</UserContext.Provider>;
 };
